@@ -15,7 +15,6 @@ const App = () => {
       countryService.getCountries()
         .then(response => {
           const data = response
-          console.log(value)
           const organizedData = data.map((country, index) => ({
             key: index, 
             name: country.name.common, 
