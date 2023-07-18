@@ -95,7 +95,7 @@ describe('mostLikes function', () => {
       'likes': 7
     })
   })
-  test.only('empty blog returns an empty object', () => {
+  test('empty blog returns an empty object', () => {
     const result = listHelper.mostLikes([])
     expect(result).toEqual({ })
   })

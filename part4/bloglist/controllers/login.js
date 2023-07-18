@@ -5,7 +5,6 @@ const User = require('../models/user')
 
 loginRouter.post('/', async (request, response) => {
   const { username, password } = request.body
-
   const user = await User.findOne({ username })
   const passwordCorrect = user === null
     ? false
@@ -22,7 +21,7 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   }
 
-  // token expires in 60*60 seconds, that is, in one hour
+  // token expires in 60*60 seconds
   const token = jwt.sign(
     userForToken,
     process.env.SECRET,

@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
-
 const User = require('../models/user')
 
 beforeEach(async () => {
@@ -29,8 +28,8 @@ describe('a valid user post request is saved to database', () => {
       .send(newUser)
       .expect(201)
 
-    const usersAtEndResponse = await api.get('/api/users')
-    const contents = usersAtEndResponse.body.map(user => user.username)
+    const usersAtEndResponse = await helper.usersInDb()
+    const contents = usersAtEndResponse.map(user => user.username)
 
     expect(contents.length).toBe(2)
     expect(contents).toContain(newUser.username)
@@ -71,8 +70,8 @@ describe('user post requests that have invalid username are not saved', () => {
   })
 
   test('no new users have been added to the database', async () => {
-    const usersAtEndResponse = await api.get('/api/users')
-    const contents = usersAtEndResponse.body.map(user => user.username)
+    const usersAtEndResponse = await helper.usersInDb()
+    const contents = usersAtEndResponse.map(user => user.username)
 
     expect(contents.length).toBe(1)
     expect(contents).toContain(helper.initialUsers[0].username)
@@ -112,8 +111,8 @@ describe('user post requests that have invalid password are not saved', () => {
   })
 
   test('no new users have been added to the database', async () => {
-    const usersAtEndResponse = await api.get('/api/users')
-    const contents = usersAtEndResponse.body.map(user => user.username)
+    const usersAtEndResponse = await helper.usersInDb()
+    const contents = usersAtEndResponse.map(user => user.username)
 
     expect(contents.length).toBe(1)
     expect(contents).toContain(helper.initialUsers[0].username)

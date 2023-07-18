@@ -4,10 +4,10 @@ GET http://127.0.0.1:3003/api/blogs/
 
 POST http://127.0.0.1:3003/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmsiLCJpZCI6IjY0YWViN2Y2ZGFjOWM0NTQ1ZDIxZTVhZiIsImlhdCI6MTY4OTI0NjA2MywiZXhwIjoxNjg5MjQ5NjYzfQ.t75i5F-FTjzEfpljB7L0L97aXqboPjOokaFKVdyuz0m
+Authorization: Bearer
 
 {
-    "title": "Jamaican",
+    "title": "Pablo",
     "author": "Time Burton",
     "url": "www.superman.com",
     "likes": 600
@@ -15,8 +15,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hc
 
 ###
 
-DELETE http://127.0.0.1:3003/api/blogs/64af1f9e450e2a90cfeb101e
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmsiLCJpZCI6IjY0YWViN2Y2ZGFjOWM0NTQ1ZDIxZTVhZiIsImlhdCI6MTY4OTI0MTA0NSwiZXhwIjoxNjg5MjQ0NjQ1fQ.wDZf0i0_POCjkUyowA4V435jKyXBPOnMhGIPk52qIBs
+DELETE http://127.0.0.1:3003/api/blogs/64afd980024b0d458cfd744a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0YWQzZTgyNmQzNzk5ODhkMzM4YzUyZiIsImlhdCI6MTY4OTY3NzA0MywiZXhwIjoxNjg5NjgwNjQzfQ.H8I-fGszsk2MFV8b43Eskd2sK8sxMXMomCSL1WbKmn4
 
 ###
 
