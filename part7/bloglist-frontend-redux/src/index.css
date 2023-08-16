@@ -17,3 +17,12 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.navBar {
+  background: lightgray;
+  padding: 5px;
+}
+
+.link {
+  padding: 5px;
+}

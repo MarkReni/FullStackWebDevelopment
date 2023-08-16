@@ -1,26 +1,35 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Button from './components/Button'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
+import Home from './components/Home'
+import Users from './components/Users'
+import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, generateBlog, updateLikes, deleteBlog } from './reducers/blogReducer'
+import { initializeBlogs, updateLikes, deleteBlog } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
+import {
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  useMatch
+} from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const blogs = useSelector(({ blogs }) => blogs)
   const user = useSelector(({ user }) => user)
+  const users = useSelector(({ users }) => users)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-  const togglableRef = useRef()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -41,34 +50,15 @@ const App = () => {
     }
   }
 
-  const createBlog = async (blogObject) => {
-    togglableRef.current.toggleVisibility()
-
-    try {
-      dispatch(generateBlog(blogObject, user))
-      dispatch(setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`, false, 2))
-    } catch(exception) {
-      dispatch(setNotification(`${exception.response.data.error}`, true, 2))
-    }
-  }
-
   const increaseLikes = async (blogObject, blogUser) => {
-    try {
-      dispatch(updateLikes(blogObject, blogUser))
-    } catch(exception) {
-      dispatch(setNotification(`${exception.response.data.error}`, true, 2))
-    }
+    dispatch(updateLikes(blogObject, blogUser))
   }
 
   const removeBlog = async (blogToDelete) => {
-    try {
-      if(window.confirm(`remove blog ${blogToDelete.title} by ${blogToDelete.author}`)) {
-        blogService.setToken(user.token)
-        dispatch(deleteBlog(blogToDelete.id))
-        dispatch(setNotification(`A blog ${blogToDelete.title} by ${blogToDelete.author} was deleted`, false, 2))
-      }
-    } catch(exception) {
-      dispatch(setNotification(`${exception.response.data.error}`, true, 2))
+    if(window.confirm(`remove blog ${blogToDelete.title} by ${blogToDelete.author}`)) {
+      blogService.setToken(user.token)
+      dispatch(deleteBlog(blogToDelete, user))
+      navigate('/')
     }
   }
 
@@ -80,6 +70,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [])
 
   useEffect(() => {
@@ -90,6 +81,17 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const matchUser = useMatch('/users/:id')
+  const matchBlog = useMatch('/blogs/:id')
+
+  const userFilter = matchUser
+    ? users.find(user => user.id === matchUser.params.id)
+    : null
+
+  const blogFilter = matchBlog
+    ? blogs.find(blog => blog.id === matchBlog.params.id)
+    : null
 
   return (
     <div>
@@ -107,23 +109,18 @@ const App = () => {
 
       {user &&
         <div>
-          <h2>blogs</h2>
-          <p>
-            {user.name} logged in
+          <div className='navBar'>
+            <Link className='link' to="/">blogs</Link>
+            <Link className='link' to="/users">users</Link>
+            {user.name} logged in { }
             <Button text={'logout'} handleClick={handleLogout} color={''} />
-          </p>
-          <Togglable buttonLabel='create new blog' ref={togglableRef}>
-            <h2>create new</h2>
-            <BlogForm
-              createBlog={createBlog}
-            />
-          </Togglable>
-          <br />
-          <span>
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} user={user} increaseLikes={increaseLikes} removeBlog={removeBlog} />
-            )}
-          </span>
+          </div>
+          <Routes>
+            <Route path="/blogs/:id" element={<Blog blog={blogFilter} user={user} increaseLikes={increaseLikes} removeBlog={removeBlog} />} />
+            <Route path="/users/:id" element={<User user={userFilter} />} />
+            <Route path="/users" element={<Users users={users} />} />
+            <Route path="/" element={<Home user={user} blogs={blogs} />} />
+          </Routes>
         </div>
       }
     </div>
