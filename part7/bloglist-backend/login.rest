@@ -1,0 +1,17 @@
+POST http://127.0.0.1:3003/api/login/
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "salainen"
+}
+
+###
+
+POST http://127.0.0.1:3003/api/login/
+Content-Type: application/json
+
+{
+    "username": "Mark",
+    "password": "salainen"
+}

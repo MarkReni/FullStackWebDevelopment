@@ -10,20 +10,18 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, updateLikes, deleteBlog } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import {
   Routes,
   Route,
   Link,
-  useNavigate,
   useMatch
 } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const blogs = useSelector(({ blogs }) => blogs)
   const user = useSelector(({ user }) => user)
@@ -47,18 +45,6 @@ const App = () => {
       setPassword('')
     } catch(exception) {
       dispatch(setNotification('Wrong username or password', true, 2))
-    }
-  }
-
-  const increaseLikes = async (blogObject, blogUser) => {
-    dispatch(updateLikes(blogObject, blogUser))
-  }
-
-  const removeBlog = async (blogToDelete) => {
-    if(window.confirm(`remove blog ${blogToDelete.title} by ${blogToDelete.author}`)) {
-      blogService.setToken(user.token)
-      dispatch(deleteBlog(blogToDelete, user))
-      navigate('/')
     }
   }
 
@@ -116,10 +102,10 @@ const App = () => {
             <Button text={'logout'} handleClick={handleLogout} color={''} />
           </div>
           <Routes>
-            <Route path="/blogs/:id" element={<Blog blog={blogFilter} user={user} increaseLikes={increaseLikes} removeBlog={removeBlog} />} />
+            <Route path="/blogs/:id" element={<Blog blog={blogFilter} />} />
             <Route path="/users/:id" element={<User user={userFilter} />} />
-            <Route path="/users" element={<Users users={users} />} />
-            <Route path="/" element={<Home user={user} blogs={blogs} />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/" element={<Home />} />
           </Routes>
         </div>
       }

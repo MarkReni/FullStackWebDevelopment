@@ -15,7 +15,6 @@ const blogSlice = createSlice({
     },
     like(state, action) {
       const updatedBlog = action.payload
-
       return sortByLikes(state.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog))
     },
     setBlogs(state, action) {
@@ -23,11 +22,15 @@ const blogSlice = createSlice({
     },
     removeBlog(state, action) {
       return state.filter(blog => blog.id !== action.payload)
-    }
+    },
+    createComment(state, action) {
+      const updatedBlog = action.payload
+      return state.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog)
+    },
   },
 })
 
-export const { createBlog, like, setBlogs, removeBlog } = blogSlice.actions
+export const { createBlog, like, setBlogs, removeBlog, createComment } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -67,6 +70,17 @@ export const deleteBlog = (blog, user) => {
       dispatch(removeBlog(blog.id))
       dispatch(removeFromUser(blog, user))
       dispatch(setNotification(`A blog ${blog.title} by ${blog.author} was deleted`, false, 2))
+    } catch(exception) {
+      dispatch(setNotification(`${exception.response.data.error}`, true, 2))
+    }
+  }
+}
+
+export const generateComment = (blog, comment) => {
+  return async dispatch => {
+    try {
+      const updatedBlog = await blogService.createComment(blog.id, { 'comment': comment })
+      dispatch(createComment({ ...updatedBlog, user: blog.user }))
     } catch(exception) {
       dispatch(setNotification(`${exception.response.data.error}`, true, 2))
     }

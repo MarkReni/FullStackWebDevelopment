@@ -1,0 +1,41 @@
+GET http://127.0.0.1:3003/api/blogs/
+
+###
+
+POST http://127.0.0.1:3003/api/blogs/
+Content-Type: application/json
+Authorization: Bearer
+
+{
+    "title": "Pablo",
+    "author": "Time Burton",
+    "url": "www.superman.com",
+    "likes": 600
+}
+
+###
+
+DELETE http://127.0.0.1:3003/api/blogs/64ba6408cb70719d2fd4e269
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmsiLCJpZCI6IjY0YWViN2Y2ZGFjOWM0NTQ1ZDIxZTVhZiIsImlhdCI6MTY4OTk2MTAyMCwiZXhwIjoxNjg5OTY0NjIwfQ._VvsL5ngHyUfipC-kugVvPUb649ny7kqFMxU81wvF9g
+
+###
+
+PUT http://127.0.0.1:3003/api/blogs/64ad3f91a03fc38927d3d7bd
+Content-Type: application/json
+
+{
+    "title": "Batman Forever",
+    "author": "Time Burton",
+    "url": "www.batman.com",
+    "likes": 400,
+    "user": "64ad3e826d379988d338c52f"
+}
+
+###
+
+POST http://127.0.0.1:3003/api/blogs/64da3a68dfb48161f432e31b/comments
+Content-Type: application/json
+
+{
+    "comment": "Awesome post 2"
+}

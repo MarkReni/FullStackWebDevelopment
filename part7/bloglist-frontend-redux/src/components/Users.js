@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-const Users = ({ users }) => {
+const Users = () => {
+  const users = useSelector(({ users }) => users)
+
   return(
     <div>
       <h2>Users</h2>

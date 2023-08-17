@@ -1,12 +1,14 @@
 import { useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { generateBlog } from '../reducers/blogReducer'
 import { Link } from 'react-router-dom'
 import BlogForm from '../components/BlogForm'
 import Togglable from '../components/Togglable'
 
-const Home = ({ user, blogs }) => {
+const Home = () => {
   const dispatch = useDispatch()
+  const blogs = useSelector(({ blogs }) => blogs)
+  const user = useSelector(({ user }) => user)
 
   const togglableRef = useRef()
 
