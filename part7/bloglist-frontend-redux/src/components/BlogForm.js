@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TextField, Button } from '@mui/material'
 
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
@@ -21,34 +22,41 @@ const BlogForm = ({ createBlog }) => {
 
   return (
     <form onSubmit={addBlog}>
-    title:
-      <input
-        type="text"
-        value={title}
-        name="Title"
-        onChange={({ target }) => setTitle(target.value)}
-        placeholder='writeTitle'
-      />
-      <br />
-    author:
-      <input
-        type="text"
-        value={author}
-        name="Author"
-        onChange={({ target }) => setAuthor(target.value)}
-        placeholder='writeAuthor'
-      />
-      <br />
-    url:
-      <input
-        type="text"
-        value={url}
-        name="Url"
-        onChange={({ target }) => setUrl(target.value)}
-        placeholder='writeUrl'
-      />
-      <br />
-      <button type="submit" id='create-button'>create</button>
+      <div>
+        <div>
+          <TextField variant="outlined" size="small"
+            label='title'
+            type="text"
+            value={title}
+            name="Title"
+            onChange={({ target }) => setTitle(target.value)}
+            placeholder='writeTitle'
+          />
+        </div>
+        <div>
+          <TextField variant="outlined" size="small"
+            label='author'
+            type="text"
+            value={author}
+            name="Author"
+            onChange={({ target }) => setAuthor(target.value)}
+            placeholder='writeAuthor'
+          />
+        </div>
+        <div>
+          <TextField variant="outlined" size="small"
+            label='url'
+            type="text"
+            value={url}
+            name="Url"
+            onChange={({ target }) => setUrl(target.value)}
+            placeholder='writeUrl'
+          />
+        </div>
+        <Button variant="contained" type="submit" id='create-button'>
+          create
+        </Button>
+      </div>
     </form>
   )}
 

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import Button from './components/Button'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Home from './components/Home'
@@ -19,6 +18,73 @@ import {
   Link,
   useMatch
 } from 'react-router-dom'
+import { Container, AppBar, Toolbar, Stack, Button, Typography, colors, Avatar } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: '#f8bbd0',
+      main: '#f06292',
+      dark: '#ec407a',
+      contrastText: '#880e4f',
+    },
+    secondary: colors.purple
+  },
+  typography: {
+    fontFamily: 'Monospace, Arial',
+    fontSize: 16
+  },
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontSize: 20,
+          fontWeight: 700,
+          fontFamily: 'Oswald, Arial'
+        },
+        contained: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'lighter',
+          fontSize: 17,
+          padding: '1px 10px',
+          marginTop: '5px'
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          height: '10px',
+          marginBottom: 40,
+          input: {
+            '&:-webkit-autofill': {
+              WebkitBoxShadow: '0 0 0 100px #f8bbd0 inset',
+              WebkitTextFillColor: 'default',
+            },
+          },
+        },
+      }
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          marginBottom: 15,
+          fontFamily: 'Barlow Arial',
+          color: '#880e4f'
+        },
+        caption: {
+          marginBottom: 0,
+          fontSize: 17
+        }
+      }
+    },
+  }
+})
 
 const App = () => {
   const dispatch = useDispatch()
@@ -79,11 +145,15 @@ const App = () => {
     ? blogs.find(blog => blog.id === matchBlog.params.id)
     : null
 
-  return (
-    <div>
-      <Notification />
+  const imageLink = 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260'
 
-      {!user &&
+  return (
+    <ThemeProvider theme={theme}>
+      <Container sx={{ backgroundColor: 'primary.light', minHeight: '800px', maxHeight: '1000px', minWidth: '300px', maxWidth: '1000px' }}>
+        <div>
+          <Notification />
+
+          {!user &&
         <LoginForm
           handleLogin={handleLogin}
           username={username}
@@ -91,15 +161,28 @@ const App = () => {
           setUsername={setUsername}
           setPassword={setPassword}
         />
-      }
+          }
 
-      {user &&
+          {user &&
         <div>
-          <div className='navBar'>
-            <Link className='link' to="/">blogs</Link>
-            <Link className='link' to="/users">users</Link>
-            {user.name} logged in { }
-            <Button text={'logout'} handleClick={handleLogout} color={''} />
+          <div>
+            <AppBar color="primary" position="static" elevation={1} sx={{ marginBottom: '20px' }}>
+              <Toolbar variant="dense" >
+                <Stack direction='row' spacing={2} sx={{ flexGrow: 0.95 }} >
+                  <Button color="inherit" component={Link} to="/">
+                    blogs
+                  </Button>
+                  <Button color="inherit" component={Link} to="/users">
+                    users
+                  </Button>
+                </Stack>
+                <Avatar alt="Random image" src={imageLink} />
+                <Typography variant="h7" sx={{ m: 2, fontStyle: 'italic' }}>
+                  {user.name} logged in { }
+                </Typography>
+                <Button variant='contained' onClick={handleLogout}>logout</Button>
+              </Toolbar>
+            </AppBar>
           </div>
           <Routes>
             <Route path="/blogs/:id" element={<Blog blog={blogFilter} />} />
@@ -108,8 +191,10 @@ const App = () => {
             <Route path="/" element={<Home />} />
           </Routes>
         </div>
-      }
-    </div>
+          }
+        </div>
+      </Container>
+    </ThemeProvider>
   )
 }
 
