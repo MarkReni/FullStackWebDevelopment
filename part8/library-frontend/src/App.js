@@ -3,21 +3,22 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
-//import Recommend from './components/Recommend'
+import Recommend from './components/Recommend'
 import { ALL_AUTHORS, ALL_BOOKS, ME } from './queries'
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useApolloClient, useLazyQuery } from '@apollo/client'
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('library-user-token'))
   const [page, setPage] = useState('authors')
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultBooks = useQuery(ALL_BOOKS)
-  // const resultLoggedInUser = useQuery(ME, {
-  //   skip: !token
-  // })
+  const resultLoggedInUser = useQuery(ME, {
+    skip: !token
+  })
+  const [getMe, meResults] = useLazyQuery(ME)
   const client = useApolloClient()
 
-  if (resultAuthors.loading || resultBooks.loading)  {
+  if (resultAuthors.loading || resultBooks.loading || meResults.loading)  {
     return <div>loading...</div>
   }
 
@@ -25,9 +26,8 @@ const App = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+    window.location.reload(false)
   }
-
-  //<Recommend favorite={resultLoggedInUser.data.me} books={resultBooks.data.allBooks} show={page === 'recommend'} />
 
   return (
     <div>
@@ -58,8 +58,18 @@ const App = () => {
       <Books books={resultBooks.data.allBooks} show={page === 'books'} />
 
       <NewBook show={page === 'add'} />
+
+      {
+        token && meResults.data &&
+          <Recommend favorite={meResults.data.me} books={resultBooks.data.allBooks} show={page === 'recommend'} />
+      }
+
+      {
+        token && resultLoggedInUser.data && !meResults.data &&
+          <Recommend favorite={resultLoggedInUser.data.me} books={resultBooks.data.allBooks} show={page === 'recommend'} />
+      }
   
-      <LoginForm setToken={setToken} show={page === 'login'} />
+      <LoginForm getMe={getMe} setToken={setToken} show={page === 'login'} />
 
     </div>
   )
