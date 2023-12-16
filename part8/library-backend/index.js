@@ -197,7 +197,9 @@ const resolvers = {
   },
   Book: {
     title: (root) => root.title,
-    author: (root) => root.author,
+    author: async (root) => {
+      return await Author.findById(root.author)
+    },
     published: (root) => root. published,
     genres: (root) => root.genres,
     id: (root) => root.id
@@ -206,7 +208,8 @@ const resolvers = {
     name: (root) => root.name,
     born: (root) => root.born,
     bookCount: async (root) => {
-      return 0  // not implemented 
+      const books = await Book.find({ author: root })
+      return books.length
     }
   },
   User: {
